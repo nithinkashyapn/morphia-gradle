@@ -23,7 +23,7 @@ public class Application {
         ResourceConfig rc = new ResourceConfig().packages("org.glassfish.jersey.examples.linking").register(DeclarativeLinkingFeature.class).packages("in.nithin.endpoints");
 //        rc.register(org.rest.converters.DateParamConverterProvider.class);
 //        rc.register(org.rest.exceptions.AppExceptionMapper.class);
-//        rc.register(org.rest.config.CorsConfig.class);
+        rc.register(in.nithin.config.CorsConfig.class);
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 
