@@ -3,7 +3,7 @@ package in.nithin.endpoints;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import jersey.repackaged.com.google.common.collect.Lists;
-import in.nithin.model.Caesar;
+import in.nithin.controller.CaesarED;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
@@ -19,11 +19,18 @@ public class CaesarEndpoint {
     @POST
     @Path("encrypt")
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response encryption(Caesar caesar){
-        System.out.println(caesar.message +" "+ caesar.offset);
-        String result = "Encryption";
-        return Response.status(200).entity(caesar).build();
+    public Response encryption(@FormParam("message") String message, @FormParam("offset") int offset){
+
+        String eMessage = CaesarED.encrypt(message, offset);
+
+        JsonObject jsObj = new JsonObject();
+        jsObj.addProperty("status", "Encryption");
+        jsObj.addProperty("message", message);
+        jsObj.addProperty("eMessage", eMessage);
+        jsObj.addProperty("offset", offset);
+
+        String result = jsObj.toString();
+        return Response.status(200).entity(result).build();
     }
 
     @POST
@@ -31,9 +38,12 @@ public class CaesarEndpoint {
     @Produces({MediaType.APPLICATION_JSON})
     public Response decryption(@FormParam("message") String message, @FormParam("offset") int offset){
 
+        String dMessage = CaesarED.decrypt(message, offset);
+
         JsonObject jsObj = new JsonObject();
-        jsObj.addProperty("Status", "Decryption");
+        jsObj.addProperty("status", "Decryption");
         jsObj.addProperty("message", message);
+        jsObj.addProperty("dMessage", dMessage);
         jsObj.addProperty("offset", offset);
 
         String result = jsObj.toString();
